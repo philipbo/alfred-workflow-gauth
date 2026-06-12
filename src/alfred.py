@@ -112,17 +112,20 @@ def work(volatile):
 def config_set(key, value, volatile=True):
     filepath = os.path.join(work(volatile), 'config.plist')
     try:
-        conf = plistlib.readPlist(filepath)
+        with open(filepath, 'rb') as f:
+            conf = plistlib.load(f)
     except IOError:
         conf = {}
     conf[key] = value
-    plistlib.writePlist(conf, filepath)
+    with open(filepath, 'wb') as f:
+        plistlib.dump(conf, f)
 
 
 def config_get(key, default=None, volatile=True):
     filepath = os.path.join(work(volatile), 'config.plist')
     try:
-        conf = plistlib.readPlist(filepath)
+        with open(filepath, 'rb') as f:
+            conf = plistlib.load(f)
     except IOError:
         conf = {}
     if key in conf:
